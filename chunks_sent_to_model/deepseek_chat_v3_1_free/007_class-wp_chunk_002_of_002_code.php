@@ -1,0 +1,293 @@
+<?php
+/*
+ * CHUNK DATA
+ * Original file: 007_class-wp.php
+ * Lines: 501 to 783 (of 783 total)
+ * Chunk: 2 of 2
+ * Model: deepseek/deepseek-chat-v3.1:free
+ * Strategy: chunk_basic
+ * Timestamp: 2025-09-01 08:03:48.539412
+ */
+
+	public function register_globals() {
+		global $wp_query;
+
+		// Extract updated query vars back into global namespace.
+		foreach ( (array) $wp_query->query_vars as $key => $value ) {
+			$GLOBALS[ $key ] = $value;
+		}
+
+		$GLOBALS['query_string'] = $this->query_string;
+		$GLOBALS['posts'] = & $wp_query->posts;
+		$GLOBALS['post'] = isset( $wp_query->post ) ? $wp_query->post : null;
+		$GLOBALS['request'] = $wp_query->request;
+
+		if ( $wp_query->is_single() || $wp_query->is_page() ) {
+			$GLOBALS['more']   = 1;
+			$GLOBALS['single'] = 1;
+		}
+
+		if ( $wp_query->is_author() && isset( $wp_query->post ) )
+			$GLOBALS['authordata'] = get_userdata( $wp_query->post->post_author );
+	}
+
+	/**
+	 * Set up the current user.
+	 *
+	 * @since 2.0.0
+	 */
+	public function init() {
+		wp_get_current_user();
+	}
+
+	/**
+	 * Set up the Loop based on the query variables.
+	 *
+	 * @uses WP::$query_vars
+	 * @since 2.0.0
+	 */
+	public function query_posts() {
+		global $wp_the_query;
+		$this->build_query_string();
+		$wp_the_query->query($this->query_vars);
+ 	}
+
+ 	/**
+ 	 * Set the Headers for 404, if nothing is found for requested URL.
+	 *
+	 * Issue a 404 if a request doesn't match any posts and doesn't match
+	 * any object (e.g. an existing-but-empty category, tag, author) and a 404 was not already
+	 * issued, and if the request was not a search or the homepage.
+	 *
+	 * Otherwise, issue a 200.
+	 *
+	 * @since 2.0.0
+ 	 */
+	public function handle_404() {
+		global $wp_query;
+
+		// If we've already issued a 404, bail.
+		if ( is_404() )
+			return;
+
+		// Never 404 for the admin, robots, or if we found posts.
+		if ( is_admin() || is_robots() || $wp_query->posts ) {
+			status_header( 200 );
+			return;
+		}
+
+		// We will 404 for paged queries, as no posts were found.
+		if ( ! is_paged() ) {
+
+			// Don't 404 for authors without posts as long as they matched an author on this site.
+			$author = get_query_var( 'author' );
+			if ( is_author() && is_numeric( $author ) && $author > 0 && is_user_member_of_blog( $author ) ) {
+				status_header( 200 );
+				return;
+			}
+
+			// Don't 404 for these queries if they matched an object.
+			if ( ( is_tag() || is_category() || is_tax() || is_post_type_archive() ) && get_queried_object() ) {
+				status_header( 200 );
+				return;
+			}
+
+			// Don't 404 for these queries either.
+			if ( is_home() || is_search() || is_feed() ) {
+				status_header( 200 );
+				return;
+			}
+		}
+
+		// Guess it's time to 404.
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+	}
+
+	/**
+	 * Sets up all of the variables required by the WordPress environment.
+	 *
+	 * The action 'wp' has one parameter that references the WP object. It
+	 * allows for accessing the properties and methods to further manipulate the
+	 * object.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string|array $query_args Passed to {@link parse_request()}
+	 */
+	public function main($query_args = '') {
+		$this->init();
+		$this->parse_request($query_args);
+		$this->send_headers();
+		$this->query_posts();
+		$this->handle_404();
+		$this->register_globals();
+
+		/**
+		 * Fires once the WordPress environment has been set up.
+		 *
+		 * @since 2.1.0
+		 *
+		 * @param WP &$this Current WordPress environment instance (passed by reference).
+		 */
+		do_action_ref_array( 'wp', array( &$this ) );
+	}
+
+}
+
+/**
+ * Helper class to remove the need to use eval to replace $matches[] in query strings.
+ *
+ * @since 2.9.0
+ */
+class WP_MatchesMapRegex {
+	/**
+	 * store for matches
+	 *
+	 * @access private
+	 * @var array
+	 */
+	private $_matches;
+
+	/**
+	 * store for mapping result
+	 *
+	 * @access public
+	 * @var string
+	 */
+	public $output;
+
+	/**
+	 * subject to perform mapping on (query string containing $matches[] references
+	 *
+	 * @access private
+	 * @var string
+	 */
+	private $_subject;
+
+	/**
+	 * regexp pattern to match $matches[] references
+	 *
+	 * @var string
+	 */
+	public $_pattern = '(\$matches\[[1-9]+[0-9]*\])'; // magic number
+
+	/**
+	 * Make private properties readable for backwards compatibility.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 *
+	 * @param string $name Property to get.
+	 * @return mixed Property.
+	 */
+	public function __get( $name ) {
+		return $this->$name;
+	}
+
+	/**
+	 * Make private properties settable for backwards compatibility.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 *
+	 * @param string $name  Property to set.
+	 * @param mixed  $value Property value.
+	 * @return mixed Newly-set property.
+	 */
+	public function __set( $name, $value ) {
+		return $this->$name = $value;
+	}
+
+	/**
+	 * Make private properties checkable for backwards compatibility.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 *
+	 * @param string $name Property to check if set.
+	 * @return bool Whether the property is set.
+	 */
+	public function __isset( $name ) {
+		return isset( $this->$name );
+	}
+
+	/**
+	 * Make private properties un-settable for backwards compatibility.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 *
+	 * @param string $name Property to unset.
+	 */
+	public function __unset( $name ) {
+		unset( $this->$name );
+	}
+
+	/**
+	 * Make private/protected methods readable for backwards compatibility.
+	 *
+	 * @since 4.0.0
+	 * @access public
+	 *
+	 * @param callable $name      Method to call.
+	 * @param array    $arguments Arguments to pass when calling.
+	 * @return mixed|bool Return value of the callback, false otherwise.
+	 */
+	public function __call( $name, $arguments ) {
+		return call_user_func_array( array( $this, $name ), $arguments );
+	}
+
+	/**
+	 * constructor
+	 *
+	 * @param string $subject subject if regex
+	 * @param array  $matches data to use in map
+	 * @return self
+	 */
+	public function WP_MatchesMapRegex($subject, $matches) {
+		$this->_subject = $subject;
+		$this->_matches = $matches;
+		$this->output = $this->_map();
+	}
+
+	/**
+	 * Substitute substring matches in subject.
+	 *
+	 * static helper function to ease use
+	 *
+	 * @access public
+	 * @param string $subject subject
+	 * @param array  $matches data used for substitution
+	 * @return string
+	 */
+	public static function apply($subject, $matches) {
+		$oSelf = new WP_MatchesMapRegex($subject, $matches);
+		return $oSelf->output;
+	}
+
+	/**
+	 * do the actual mapping
+	 *
+	 * @access private
+	 * @return string
+	 */
+	private function _map() {
+		$callback = array($this, 'callback');
+		return preg_replace_callback($this->_pattern, $callback, $this->_subject);
+	}
+
+	/**
+	 * preg_replace_callback hook
+	 *
+	 * @access public
+	 * @param  array $matches preg_replace regexp matches
+	 * @return string
+	 */
+	public function callback($matches) {
+		$index = intval(substr($matches[0], 9, -1));
+		return ( isset( $this->_matches[$index] ) ? urlencode($this->_matches[$index]) : '' );
+	}
+
+}

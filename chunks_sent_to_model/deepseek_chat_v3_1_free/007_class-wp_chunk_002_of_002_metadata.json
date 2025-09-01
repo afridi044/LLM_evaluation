@@ -1,0 +1,14 @@
+{
+  "original_file": "007_class-wp.php",
+  "model": "deepseek/deepseek-chat-v3.1:free",
+  "strategy": "chunk_basic",
+  "chunk_number": 2,
+  "total_chunks": 2,
+  "start_line": 501,
+  "end_line": 783,
+  "total_lines": 783,
+  "chunk_lines": 283,
+  "code_length": 6625,
+  "prompt_length": 7403,
+  "timestamp": "2025-09-01T08:03:48.545974"
+}
