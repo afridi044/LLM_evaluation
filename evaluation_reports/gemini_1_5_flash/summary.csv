@@ -1,0 +1,3 @@
+file_id,filename,original_path,lines_of_code,file_size_kb,php_version_changes,has_version_changes
+1,001_getid3.lib.php,llm_generated/gemini_1_5_flash/001_getid3.lib.php,1337,44.7,0,False
+3,003_wp-db.php,llm_generated/gemini_1_5_flash/003_wp-db.php,2179,61.4,12,True
