@@ -1,12 +1,12 @@
 === RAW MODEL RESPONSE ===
 File: 001_getid3.lib.php
 Model: gemini-1.5-flash
-Strategy: chunk_basic
+Strategy: chunk_comprehensive
 Chunk: 1
 Provider: GOOGLE
-Length: 16063 characters
-Usage: {'prompt_tokens': 6030, 'completion_tokens': 5656}
-Timestamp: 2025-09-03 14:14:11.419721
+Length: 16672 characters
+Usage: {'prompt_tokens': 6112, 'completion_tokens': 5800}
+Timestamp: 2025-09-03 14:22:01.212932
 ==================================================
 
 // MIGRATION_START
@@ -26,13 +26,13 @@ Timestamp: 2025-09-03 14:14:11.419721
 class getid3_lib
 {
 
-	public static function PrintHexBytes($string, $hex=true, $spaces=true, $htmlencoding='UTF-8') {
+	public static function PrintHexBytes(string $string, bool $hex = true, bool $spaces = true, string $htmlencoding = 'UTF-8'): string {
 		$returnstring = '';
 		for ($i = 0; $i < strlen($string); $i++) {
 			if ($hex) {
-				$returnstring .= str_pad(dechex(ord($string{$i})), 2, '0', STR_PAD_LEFT);
+				$returnstring .= str_pad(dechex(ord($string[$i])), 2, '0', STR_PAD_LEFT);
 			} else {
-				$returnstring .= ' '.(preg_match("#[\x20-\x7E]#", $string{$i}) ? $string{$i} : '¤');
+				$returnstring .= ' '.(preg_match("#[\x20-\x7E]#", $string[$i]) ? $string[$i] : '¤');
 			}
 			if ($spaces) {
 				$returnstring .= ' ';
@@ -49,7 +49,7 @@ class getid3_lib
 	
 	}
 
-	public static function trunc($floatnumber) {
+	public static function trunc(float $floatnumber): int|float {
 		// truncates a floating-point number at the decimal point
 		// returns int (if possible, otherwise float)
 		if ($floatnumber >= 1) {
@@ -67,7 +67,7 @@ class getid3_lib
 	}
 
 
-	public static function safe_inc(&$variable, $increment=1) {
+	public static function safe_inc(int &$variable, int $increment = 1): bool {
 		if (isset($variable)) {
 			$variable += $increment;
 		} else {
@@ -76,7 +76,7 @@ class getid3_lib
 		return true;
 	}
 
-	public static function CastAsInt($floatnum) {
+	public static function CastAsInt(float $floatnum): int|float {
 		// convert to float if not already
 		$floatnum = (float) $floatnum;
 
@@ -91,7 +91,7 @@ class getid3_lib
 		return $floatnum;
 	}
 
-	public static function intValueSupported($num) {
+	public static function intValueSupported(float|int $num): bool {
 		// check if integers are 64-bit
 		static $hasINT64 = null;
 		if ($hasINT64 === null) { // 10x faster than is_null()
@@ -107,20 +107,20 @@ class getid3_lib
 		return false;
 	}
 
-	public static function DecimalizeFraction($fraction) {
-		list($numerator, $denominator) = explode('/', $fraction);
+	public static function DecimalizeFraction(string $fraction): float {
+		[$numerator, $denominator] = explode('/', $fraction);
 		return $numerator / ($denominator ? $denominator : 1);
 	}
 
 
-	public static function DecimalBinary2Float($binarynumerator) {
+	public static function DecimalBinary2Float(string $binarynumerator): float {
 		$numerator   = self::Bin2Dec($binarynumerator);
 		$denominator = self::Bin2Dec('1'.str_repeat('0', strlen($binarynumerator)));
 		return ($numerator / $denominator);
 	}
 
 
-	public static function NormalizeBinaryPoint($binarypointnumber, $maxbits=52) {
+	public static function NormalizeBinaryPoint(string $binarypointnumber, int $maxbits = 52): array {
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/binary.html
 		if (strpos($binarypointnumber, '.') === false) {
 			$binarypointnumber = '0.'.$binarypointnumber;
@@ -140,11 +140,11 @@ class getid3_lib
 			}
 		}
 		$binarypointnumber = str_pad(substr($binarypointnumber, 0, $maxbits + 2), $maxbits + 2, '0', STR_PAD_RIGHT);
-		return array('normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent);
+		return ['normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent];
 	}
 
 
-	public static function Float2BinaryDecimal($floatvalue) {
+	public static function Float2BinaryDecimal(float $floatvalue): string {
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/binary.html
 		$maxbits = 128; // to how many bits of precision should the calculations be taken?
 		$intpart   = self::trunc($floatvalue);
@@ -160,7 +160,7 @@ class getid3_lib
 	}
 
 
-	public static function Float2String($floatvalue, $bits) {
+	public static function Float2String(float $floatvalue, int $bits): string|false {
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/ieee-expl.html
 		switch ($bits) {
 			case 32:
@@ -191,12 +191,12 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2Float($byteword) {
+	public static function LittleEndian2Float(string $byteword): float|string|false {
 		return self::BigEndian2Float(strrev($byteword));
 	}
 
 
-	public static function BigEndian2Float($byteword) {
+	public static function BigEndian2Float(string $byteword): float|string|false {
 		// ANSI/IEEE Standard 754-1985, Standard for Binary Floating Point Arithmetic
 		// http://www.psc.edu/general/software/packages/ieee/ieee.html
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/ieee.html
@@ -274,7 +274,7 @@ class getid3_lib
 	}
 
 
-	public static function BigEndian2Int($byteword, $synchsafe=false, $signed=false) {
+	public static function BigEndian2Int(string $byteword, bool $synchsafe = false, bool $signed = false): int|false {
 		$intvalue = 0;
 		$bytewordlen = strlen($byteword);
 		if ($bytewordlen == 0) {
@@ -283,9 +283,9 @@ class getid3_lib
 		for ($i = 0; $i < $bytewordlen; $i++) {
 			if ($synchsafe) { // disregard MSB, effectively 7-bit bytes
 				//$intvalue = $intvalue | (ord($byteword{$i}) & 0x7F) << (($bytewordlen - 1 - $i) * 7); // faster, but runs into problems past 2^31 on 32-bit systems
-				$intvalue += (ord($byteword{$i}) & 0x7F) * pow(2, ($bytewordlen - 1 - $i) * 7);
+				$intvalue += (ord($byteword[$i]) & 0x7F) * pow(2, ($bytewordlen - 1 - $i) * 7);
 			} else {
-				$intvalue += ord($byteword{$i}) * pow(256, ($bytewordlen - 1 - $i));
+				$intvalue += ord($byteword[$i]) * pow(256, ($bytewordlen - 1 - $i));
 			}
 		}
 		if ($signed && !$synchsafe) {
@@ -304,22 +304,22 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2Int($byteword, $signed=false) {
+	public static function LittleEndian2Int(string $byteword, bool $signed = false): int|false {
 		return self::BigEndian2Int(strrev($byteword), false, $signed);
 	}
 
 
-	public static function BigEndian2Bin($byteword) {
+	public static function BigEndian2Bin(string $byteword): string {
 		$binvalue = '';
 		$bytewordlen = strlen($byteword);
 		for ($i = 0; $i < $bytewordlen; $i++) {
-			$binvalue .= str_pad(decbin(ord($byteword{$i})), 8, '0', STR_PAD_LEFT);
+			$binvalue .= str_pad(decbin(ord($byteword[$i])), 8, '0', STR_PAD_LEFT);
 		}
 		return $binvalue;
 	}
 
 
-	public static function BigEndian2String($number, $minbytes=1, $synchsafe=false, $signed=false) {
+	public static function BigEndian2String(int $number, int $minbytes = 1, bool $synchsafe = false, bool $signed = false): string {
 		if ($number < 0) {
 			throw new Exception('ERROR: self::BigEndian2String() does not support negative numbers');
 		}
@@ -340,7 +340,7 @@ class getid3_lib
 	}
 
 
-	public static function Dec2Bin($number) {
+	public static function Dec2Bin(int $number): string {
 		while ($number >= 256) {
 			$bytes[] = (($number / 256) - (floor($number / 256))) * 256;
 			$number = floor($number / 256);
@@ -354,7 +354,7 @@ class getid3_lib
 	}
 
 
-	public static function Bin2Dec($binstring, $signed=false) {
+	public static function Bin2Dec(string $binstring, bool $signed = false): int {
 		$signmult = 1;
 		if ($signed) {
 			if ($binstring{0} == '1') {
@@ -370,7 +370,7 @@ class getid3_lib
 	}
 
 
-	public static function Bin2String($binstring) {
+	public static function Bin2String(string $binstring): string {
 		// return 'hi' for input of '0110100001101001'
 		$string = '';
 		$binstringreversed = strrev($binstring);
@@ -381,7 +381,7 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2String($number, $minbytes=1, $synchsafe=false) {
+	public static function LittleEndian2String(int $number, int $minbytes = 1, bool $synchsafe = false): string {
 		$intstring = '';
 		while ($number > 0) {
 			if ($synchsafe) {
@@ -396,7 +396,7 @@ class getid3_lib
 	}
 
 
-	public static function array_merge_clobber($array1, $array2) {
+	public static function array_merge_clobber(array $array1, array $array2): array|false {
 		// written by kcØhireability*com
 		// taken from http://www.php.net/manual/en/function.array-merge-recursive.php
 		if (!is_array($array1) || !is_array($array2)) {
@@ -414,7 +414,7 @@ class getid3_lib
 	}
 
 
-	public static function array_merge_noclobber($array1, $array2) {
+	public static function array_merge_noclobber(array $array1, array $array2): array|false {
 		if (!is_array($array1) || !is_array($array2)) {
 			return false;
 		}
@@ -430,7 +430,7 @@ class getid3_lib
 	}
 
 
-	public static function ksort_recursive(&$theArray) {
+	public static function ksort_recursive(array &$theArray): bool {
 		ksort($theArray);
 		foreach ($theArray as $key => $value) {
 			if (is_array($value)) {
@@ -440,7 +440,7 @@ class getid3_lib
 		return true;
 	}
 
-	public static function fileextension($filename, $numextensions=1) {
+	public static function fileextension(string $filename, int $numextensions = 1): string {
 		if (strstr($filename, '.')) {
 			$reversedfilename = strrev($filename);
 			$offset = 0;
@@ -456,7 +456,7 @@ class getid3_lib
 	}
 
 
-	public static function PlaytimeString($seconds) {
+	public static function PlaytimeString(int|float $seconds): string {
 		$sign = (($seconds < 0) ? '-' : '');
 		$seconds = round(abs($seconds));
 		$H = (int) floor( $seconds                            / 3600);
@@ -466,30 +466,30 @@ class getid3_lib
 	}
 
 
-	public static function DateMac2Unix($macdate) {
+	public static function DateMac2Unix(int $macdate): int {
 		// Macintosh timestamp: seconds since 00:00h January 1, 1904
 		// UNIX timestamp:      seconds since 00:00h January 1, 1970
 		return self::CastAsInt($macdate - 2082844800);
 	}
 
 
-	public static function FixedPoint8_8($rawdata) {
+	public static function FixedPoint8_8(string $rawdata): float {
 		return self::BigEndian2Int(substr($rawdata, 0, 1)) + (float) (self::BigEndian2Int(substr($rawdata, 1, 1)) / pow(2, 8));
 	}
 
 
-	public static function FixedPoint16_16($rawdata) {
+	public static function FixedPoint16_16(string $rawdata): float {
 		return self::BigEndian2Int(substr($rawdata, 0, 2)) + (float) (self::BigEndian2Int(substr($rawdata, 2, 2)) / pow(2, 16));
 	}
 
 
-	public static function FixedPoint2_30($rawdata) {
+	public static function FixedPoint2_30(string $rawdata): float {
 		$binarystring = self::BigEndian2Bin($rawdata);
 		return self::Bin2Dec(substr($binarystring, 0, 2)) + (float) (self::Bin2Dec(substr($binarystring, 2, 30)) / pow(2, 30));
 	}
 
 
-	public static function CreateDeepArray($ArrayPath, $Separator, $Value) {
+	public static function CreateDeepArray(string $ArrayPath, string $Separator, mixed $Value): array {
 		// assigns $Value to a nested array path:
 		//   $foo = self::CreateDeepArray('/path/to/my', '/', 'file.txt')
 		// is the same as:
@@ -505,7 +505,7 @@ class getid3_lib
 		return $ReturnedArray;
 	}
 
-	public static function array_max($arraydata, $returnkey=false) {
+	public static function array_max(array $arraydata, bool $returnkey = false): mixed {
 		$maxvalue = false;
 		$maxkey = false;
 		foreach ($arraydata as $key => $value) {

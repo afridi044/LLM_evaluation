@@ -1,16 +1,16 @@
 === RAW MODEL RESPONSE ===
 File: 001_getid3.lib.php
 Model: gemini-1.5-flash
-Strategy: chunk_basic
+Strategy: chunk_comprehensive
 Chunk: 2
 Provider: GOOGLE
-Length: 19191 characters
-Usage: {'prompt_tokens': 7874, 'completion_tokens': 7497}
-Timestamp: 2025-09-03 14:15:02.818934
+Length: 19593 characters
+Usage: {'prompt_tokens': 7956, 'completion_tokens': 7578}
+Timestamp: 2025-09-03 14:22:54.263015
 ==================================================
 
 // MIGRATION_START
-	public static function array_min($arraydata, $returnkey=false) {
+	public static function array_min(array $arraydata, bool $returnkey = false): mixed {
 		$minvalue = false;
 		$minkey = false;
 		foreach ($arraydata as $key => $value) {
@@ -24,7 +24,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 		return ($returnkey ? $minkey : $minvalue);
 	}
 
-	public static function XML2array($XMLstring) {
+	public static function XML2array(string $XMLstring): mixed {
 		if ( function_exists( 'simplexml_load_string' ) && function_exists( 'libxml_disable_entity_loader' ) ) {
 			$loader = libxml_disable_entity_loader( true );
 			$XMLobject = simplexml_load_string( $XMLstring, 'SimpleXMLElement', LIBXML_NOENT );
@@ -35,7 +35,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 		return false;
 	}
 
-	public static function SimpleXMLelement2array($XMLobject) {
+	public static function SimpleXMLelement2array(mixed $XMLobject): mixed {
 		if (!is_object($XMLobject) && !is_array($XMLobject)) {
 			return $XMLobject;
 		}
@@ -49,7 +49,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 
 	// Allan Hansen <ahØartemis*dk>
 	// self::md5_data() - returns md5sum for a file from startuing position to absolute end position
-	public static function hash_data($file, $offset, $end, $algorithm) {
+	public static function hash_data(string $file, int $offset, int $end, string $algorithm): mixed {
 		static $tempdir = '';
 		if (!self::intValueSupported($end)) {
 			return false;
@@ -135,7 +135,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 		return $result;
 	}
 
-	public static function CopyFileParts($filename_source, $filename_dest, $offset, $length) {
+	public static function CopyFileParts(string $filename_source, string $filename_dest, int $offset, int $length): bool {
 		if (!self::intValueSupported($offset + $length)) {
 			throw new Exception('cannot copy file portion, it extends beyond the '.round(PHP_INT_MAX / 1073741824).'GB limit');
 		}
@@ -162,7 +162,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 		return false;
 	}
 
-	public static function iconv_fallback_int_utf8($charval) {
+	public static function iconv_fallback_int_utf8(int $charval): string {
 		if ($charval < 128) {
 			// 0bbbbbbb
 			$newcharstring = chr($charval);
@@ -186,7 +186,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// ISO-8859-1 => UTF-8
-	public static function iconv_fallback_iso88591_utf8($string, $bom=false) {
+	public static function iconv_fallback_iso88591_utf8(string $string, bool $bom=false): string {
 		if (function_exists('utf8_encode')) {
 			return utf8_encode($string);
 		}
@@ -203,7 +203,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// ISO-8859-1 => UTF-16BE
-	public static function iconv_fallback_iso88591_utf16be($string, $bom=false) {
+	public static function iconv_fallback_iso88591_utf16be(string $string, bool $bom=false): string {
 		$newcharstring = '';
 		if ($bom) {
 			$newcharstring .= "\xFE\xFF";
@@ -215,7 +215,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// ISO-8859-1 => UTF-16LE
-	public static function iconv_fallback_iso88591_utf16le($string, $bom=false) {
+	public static function iconv_fallback_iso88591_utf16le(string $string, bool $bom=false): string {
 		$newcharstring = '';
 		if ($bom) {
 			$newcharstring .= "\xFF\xFE";
@@ -227,12 +227,12 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// ISO-8859-1 => UTF-16LE (BOM)
-	public static function iconv_fallback_iso88591_utf16($string) {
+	public static function iconv_fallback_iso88591_utf16(string $string): string {
 		return self::iconv_fallback_iso88591_utf16le($string, true);
 	}
 
 	// UTF-8 => ISO-8859-1
-	public static function iconv_fallback_utf8_iso88591($string) {
+	public static function iconv_fallback_utf8_iso88591(string $string): string {
 		if (function_exists('utf8_decode')) {
 			return utf8_decode($string);
 		}
@@ -276,7 +276,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-8 => UTF-16BE
-	public static function iconv_fallback_utf8_utf16be($string, $bom=false) {
+	public static function iconv_fallback_utf8_utf16be(string $string, bool $bom=false): string {
 		$newcharstring = '';
 		if ($bom) {
 			$newcharstring .= "\xFE\xFF";
@@ -319,7 +319,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-8 => UTF-16LE
-	public static function iconv_fallback_utf8_utf16le($string, $bom=false) {
+	public static function iconv_fallback_utf8_utf16le(string $string, bool $bom=false): string {
 		$newcharstring = '';
 		if ($bom) {
 			$newcharstring .= "\xFF\xFE";
@@ -362,12 +362,12 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-8 => UTF-16LE (BOM)
-	public static function iconv_fallback_utf8_utf16($string) {
+	public static function iconv_fallback_utf8_utf16(string $string): string {
 		return self::iconv_fallback_utf8_utf16le($string, true);
 	}
 
 	// UTF-16BE => UTF-8
-	public static function iconv_fallback_utf16be_utf8($string) {
+	public static function iconv_fallback_utf16be_utf8(string $string): string {
 		if (substr($string, 0, 2) == "\xFE\xFF") {
 			// strip BOM
 			$string = substr($string, 2);
@@ -381,7 +381,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-16LE => UTF-8
-	public static function iconv_fallback_utf16le_utf8($string) {
+	public static function iconv_fallback_utf16le_utf8(string $string): string {
 		if (substr($string, 0, 2) == "\xFF\xFE") {
 			// strip BOM
 			$string = substr($string, 2);
@@ -395,7 +395,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-16BE => ISO-8859-1
-	public static function iconv_fallback_utf16be_iso88591($string) {
+	public static function iconv_fallback_utf16be_iso88591(string $string): string {
 		if (substr($string, 0, 2) == "\xFE\xFF") {
 			// strip BOM
 			$string = substr($string, 2);
@@ -409,7 +409,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-16LE => ISO-8859-1
-	public static function iconv_fallback_utf16le_iso88591($string) {
+	public static function iconv_fallback_utf16le_iso88591(string $string): string {
 		if (substr($string, 0, 2) == "\xFF\xFE") {
 			// strip BOM
 			$string = substr($string, 2);
@@ -423,7 +423,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-16 (BOM) => ISO-8859-1
-	public static function iconv_fallback_utf16_iso88591($string) {
+	public static function iconv_fallback_utf16_iso88591(string $string): string {
 		$bom = substr($string, 0, 2);
 		if ($bom == "\xFE\xFF") {
 			return self::iconv_fallback_utf16be_iso88591(substr($string, 2));
@@ -434,7 +434,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 	// UTF-16 (BOM) => UTF-8
-	public static function iconv_fallback_utf16_utf8($string) {
+	public static function iconv_fallback_utf16_utf8(string $string): string {
 		$bom = substr($string, 0, 2);
 		if ($bom == "\xFE\xFF") {
 			return self::iconv_fallback_utf16be_utf8(substr($string, 2));
@@ -444,7 +444,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 		return $string;
 	}
 
-	public static function iconv_fallback($in_charset, $out_charset, $string) {
+	public static function iconv_fallback(string $in_charset, string $out_charset, string $string): string {
 
 		if ($in_charset == $out_charset) {
 			return $string;
@@ -493,7 +493,7 @@ Timestamp: 2025-09-03 14:15:02.818934
 	}
 
 
-	public static function MultiByteCharString2HTML($string, $charset='ISO-8859-1') {
+	public static function MultiByteCharString2HTML(string $string, string $charset='ISO-8859-1'): string {
 		$string = (string) $string; // in case trying to pass a numeric (float, int) string, would otherwise return an empty string
 		$HTMLstring = '';
 

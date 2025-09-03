@@ -1,29 +1,29 @@
 === RAW MODEL RESPONSE ===
 File: 001_getid3.lib.php
 Model: gemini-1.5-flash
-Strategy: chunk_basic
+Strategy: chunk_comprehensive
 Chunk: 3
 Provider: GOOGLE
-Length: 8356 characters
-Usage: {'prompt_tokens': 3127, 'completion_tokens': 2749}
-Timestamp: 2025-09-03 14:15:21.224006
+Length: 8319 characters
+Usage: {'prompt_tokens': 3209, 'completion_tokens': 2704}
+Timestamp: 2025-09-03 14:23:13.757657
 ==================================================
 
 // MIGRATION_START
-	public static function RGADnameLookup($namecode) {
-		static $RGADname = array();
+	public static function RGADnameLookup(int $namecode): string {
+		static array $RGADname = [];
 		if (empty($RGADname)) {
 			$RGADname[0] = 'not set';
 			$RGADname[1] = 'Track Gain Adjustment';
 			$RGADname[2] = 'Album Gain Adjustment';
 		}
 
-		return (isset($RGADname[$namecode]) ? $RGADname[$namecode] : '');
+		return $RGADname[$namecode] ?? '';
 	}
 
 
-	public static function RGADoriginatorLookup($originatorcode) {
-		static $RGADoriginator = array();
+	public static function RGADoriginatorLookup(int $originatorcode): string {
+		static array $RGADoriginator = [];
 		if (empty($RGADoriginator)) {
 			$RGADoriginator[0] = 'unspecified';
 			$RGADoriginator[1] = 'pre-set by artist/producer/mastering engineer';
@@ -31,26 +31,22 @@ Timestamp: 2025-09-03 14:15:21.224006
 			$RGADoriginator[3] = 'determined automatically';
 		}
 
-		return (isset($RGADoriginator[$originatorcode]) ? $RGADoriginator[$originatorcode] : '');
+		return $RGADoriginator[$originatorcode] ?? '';
 	}
 
 
-	public static function RGADadjustmentLookup($rawadjustment, $signbit) {
+	public static function RGADadjustmentLookup(float $rawadjustment, int $signbit): float {
 		$adjustment = $rawadjustment / 10;
 		if ($signbit == 1) {
 			$adjustment *= -1;
 		}
-		return (float) $adjustment;
+		return $adjustment;
 	}
 
 
-	public static function RGADgainString($namecode, $originatorcode, $replaygain) {
-		if ($replaygain < 0) {
-			$signbit = '1';
-		} else {
-			$signbit = '0';
-		}
-		$storedreplaygain = intval(round($replaygain * 10));
+	public static function RGADgainString(int $namecode, int $originatorcode, float $replaygain): string {
+		$signbit = ($replaygain < 0) ? '1' : '0';
+		$storedreplaygain = (int) round($replaygain * 10);
 		$gainstring  = str_pad(decbin($namecode), 3, '0', STR_PAD_LEFT);
 		$gainstring .= str_pad(decbin($originatorcode), 3, '0', STR_PAD_LEFT);
 		$gainstring .= $signbit;
@@ -59,13 +55,13 @@ Timestamp: 2025-09-03 14:15:21.224006
 		return $gainstring;
 	}
 
-	public static function RGADamplitude2dB($amplitude) {
+	public static function RGADamplitude2dB(float $amplitude): float {
 		return 20 * log10($amplitude);
 	}
 
 
-	public static function GetDataImageSize($imgData, &$imageinfo=array()) {
-		static $tempdir = '';
+	public static function GetDataImageSize(string $imgData, array &$imageinfo = []): bool {
+		static string $tempdir = '';
 		if (empty($tempdir)) {
 			// yes this is ugly, feel free to suggest a better way
 			require_once(dirname(__FILE__).'/getid3.php');
@@ -85,13 +81,13 @@ Timestamp: 2025-09-03 14:15:21.224006
 		return $GetDataImageSize;
 	}
 
-	public static function ImageExtFromMime($mime_type) {
+	public static function ImageExtFromMime(string $mime_type): string {
 		// temporary way, works OK for now, but should be reworked in the future
 		return str_replace(array('image/', 'x-', 'jpeg'), array('', '', 'jpg'), $mime_type);
 	}
 
-	public static function ImageTypesLookup($imagetypeid) {
-		static $ImageTypesLookup = array();
+	public static function ImageTypesLookup(int $imagetypeid): string {
+		static array $ImageTypesLookup = [];
 		if (empty($ImageTypesLookup)) {
 			$ImageTypesLookup[1]  = 'gif';
 			$ImageTypesLookup[2]  = 'jpeg';
@@ -108,10 +104,10 @@ Timestamp: 2025-09-03 14:15:21.224006
 			$ImageTypesLookup[13] = 'swc';
 			$ImageTypesLookup[14] = 'iff';
 		}
-		return (isset($ImageTypesLookup[$imagetypeid]) ? $ImageTypesLookup[$imagetypeid] : '');
+		return $ImageTypesLookup[$imagetypeid] ?? '';
 	}
 
-	public static function CopyTagsToComments(&$ThisFileInfo) {
+	public static function CopyTagsToComments(array &$ThisFileInfo): bool {
 
 		// Copy all entries from ['tags'] into common ['comments']
 		if (!empty($ThisFileInfo['tags'])) {
@@ -175,12 +171,12 @@ Timestamp: 2025-09-03 14:15:21.224006
 	}
 
 
-	public static function EmbeddedLookup($key, $begin, $end, $file, $name) {
+	public static function EmbeddedLookup(string $key, int $begin, int $end, string $file, string $name): string {
 
 		// Cached
-		static $cache;
+		static array $cache = [];
 		if (isset($cache[$file][$name])) {
-			return (isset($cache[$file][$name][$key]) ? $cache[$file][$name][$key] : '');
+			return $cache[$file][$name][$key] ?? '';
 		}
 
 		// Init
@@ -211,17 +207,17 @@ Timestamp: 2025-09-03 14:15:21.224006
 			// METHOD B: cache all keys in this lookup - more memory but faster on next lookup of not-previously-looked-up key
 			//$cache[$file][$name][substr($line, 0, $keylength)] = trim(substr($line, $keylength + 1));
 			$explodedLine = explode("\t", $line, 2);
-			$ThisKey   = (isset($explodedLine[0]) ? $explodedLine[0] : '');
-			$ThisValue = (isset($explodedLine[1]) ? $explodedLine[1] : '');
+			$ThisKey   = $explodedLine[0] ?? '';
+			$ThisValue = $explodedLine[1] ?? '';
 			$cache[$file][$name][$ThisKey] = trim($ThisValue);
 		}
 
 		// Close and return
 		fclose($fp);
-		return (isset($cache[$file][$name][$key]) ? $cache[$file][$name][$key] : '');
+		return $cache[$file][$name][$key] ?? '';
 	}
 
-	public static function IncludeDependency($filename, $sourcefile, $DieOnFailure=false) {
+	public static function IncludeDependency(string $filename, string $sourcefile, bool $DieOnFailure = false): bool {
 		global $GETID3_ERRORARRAY;
 
 		if (file_exists($filename)) {
@@ -241,11 +237,11 @@ Timestamp: 2025-09-03 14:15:21.224006
 		return false;
 	}
 
-	public static function trimNullByte($string) {
+	public static function trimNullByte(string $string): string {
 		return trim($string, "\x00");
 	}
 
-	public static function getFileSizeSyscall($path) {
+	public static function getFileSizeSyscall(string $path): float|false {
 		$filesize = false;
 
 		if (GETID3_OS_ISWINDOWS) {
