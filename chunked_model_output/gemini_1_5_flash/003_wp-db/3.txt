@@ -4,9 +4,9 @@ Model: gemini-1.5-flash
 Strategy: chunk_basic
 Chunk: 3
 Provider: GOOGLE
-Length: 16471 characters
-Usage: {'prompt_tokens': 5840, 'completion_tokens': 5464}
-Timestamp: 2025-09-03 14:43:15.223791
+Length: 16578 characters
+Usage: {'prompt_tokens': 5849, 'completion_tokens': 5481}
+Timestamp: 2025-09-04 13:55:00.378300
 ==================================================
 
 // MIGRATION_START
@@ -24,7 +24,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param string $string
 	 * @return string
 	 */
-	function _weak_escape( $string ) {
+	function _weak_escape( $string ): string {
 		if ( func_num_args() === 1 && function_exists( '_deprecated_function' ) )
 			_deprecated_function( __METHOD__, '3.6', 'wpdb::prepare() or esc_sql()' );
 		return addslashes( $string );
@@ -41,7 +41,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param  string $string to escape
 	 * @return string escaped
 	 */
-	function _real_escape( $string ) {
+	function _real_escape( string $string ): string {
 		if ( $this->dbh ) {
 			if ( $this->use_mysqli ) {
 				return mysqli_real_escape_string( $this->dbh, $string );
@@ -204,7 +204,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @return string Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare()
 	 *                or real_escape next.
 	 */
-	public function esc_like( $text ) {
+	public function esc_like( string $text ): string {
 		return addcslashes( $text, '_%\\' );
 	}
 
@@ -217,7 +217,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param string $str The error to display
 	 * @return bool False if the showing of errors is disabled.
 	 */
-	public function print_error( $str = '' ) {
+	public function print_error( string $str = '' ): bool {
 		global $EZSQL_ERROR;
 
 		if ( !$str ) {
@@ -277,7 +277,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param bool $show Whether to show or hide errors
 	 * @return bool Old value for showing errors.
 	 */
-	public function show_errors( $show = true ) {
+	public function show_errors( bool $show = true ): bool {
 		$errors = $this->show_errors;
 		$this->show_errors = $show;
 		return $errors;
@@ -293,7 +293,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 *
 	 * @return bool Whether showing of errors was active
 	 */
-	public function hide_errors() {
+	public function hide_errors(): bool {
 		$show = $this->show_errors;
 		$this->show_errors = false;
 		return $show;
@@ -310,7 +310,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param bool $suppress Optional. New value. Defaults to true.
 	 * @return bool Old value
 	 */
-	public function suppress_errors( $suppress = true ) {
+	public function suppress_errors( bool $suppress = true ): bool {
 		$errors = $this->suppress_errors;
 		$this->suppress_errors = (bool) $suppress;
 		return $errors;
@@ -322,7 +322,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @since 0.71
 	 * @return void
 	 */
-	public function flush() {
+	public function flush(): void {
 		$this->last_result = array();
 		$this->col_info    = null;
 		$this->last_query  = null;
@@ -350,7 +350,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param bool $allow_bail Optional. Allows the function to bail. Default true.
 	 * @return bool True with a successful connection, false on failure.
 	 */
-	public function db_connect( $allow_bail = true ) {
+	public function db_connect( bool $allow_bail = true ): bool {
 
 		$this->is_mysql = true;
 
@@ -469,7 +469,7 @@ Timestamp: 2025-09-03 14:43:15.223791
 	 * @param bool $allow_bail Optional. Allows the function to bail. Default true.
 	 * @return bool True if the connection is up.
 	 */
-	public function check_connection( $allow_bail = true ) {
+	public function check_connection( bool $allow_bail = true ): bool {
 		if ( $this->use_mysqli ) {
 			if ( @mysqli_ping( $this->dbh ) ) {
 				return true;

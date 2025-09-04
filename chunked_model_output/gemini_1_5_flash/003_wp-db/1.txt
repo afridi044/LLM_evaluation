@@ -4,9 +4,9 @@ Model: gemini-1.5-flash
 Strategy: chunk_basic
 Chunk: 1
 Provider: GOOGLE
-Length: 7856 characters
-Usage: {'prompt_tokens': 3304, 'completion_tokens': 2932}
-Timestamp: 2025-09-03 14:41:59.242024
+Length: 7901 characters
+Usage: {'prompt_tokens': 3313, 'completion_tokens': 2932}
+Timestamp: 2025-09-04 13:53:49.497780
 ==================================================
 
 // MIGRATION_START
@@ -73,7 +73,7 @@ class wpdb {
 	 * @access private
 	 * @var bool
 	 */
-	var $show_errors = false;
+	public $show_errors = false;
 
 	/**
 	 * Whether to suppress errors during the DB bootstrapping.
@@ -82,7 +82,7 @@ class wpdb {
 	 * @since 2.5.0
 	 * @var bool
 	 */
-	var $suppress_errors = false;
+	public $suppress_errors = false;
 
 	/**
 	 * The last error during query.
@@ -99,7 +99,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $num_queries = 0;
+	public $num_queries = 0;
 
 	/**
 	 * Count of rows returned by previous query
@@ -108,7 +108,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $num_rows = 0;
+	public $num_rows = 0;
 
 	/**
 	 * Count of affected rows by previous query
@@ -117,7 +117,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $rows_affected = 0;
+	public $rows_affected = 0;
 
 	/**
 	 * The ID generated for an AUTO_INCREMENT column by the previous query (usually INSERT).
@@ -126,7 +126,7 @@ class wpdb {
 	 * @access public
 	 * @var int
 	 */
-	var $insert_id = 0;
+	public $insert_id = 0;
 
 	/**
 	 * Last query made
@@ -135,7 +135,7 @@ class wpdb {
 	 * @access private
 	 * @var array
 	 */
-	var $last_query;
+	public $last_query;
 
 	/**
 	 * Results of the last query made
@@ -144,7 +144,7 @@ class wpdb {
 	 * @access private
 	 * @var array|null
 	 */
-	var $last_result;
+	public $last_result;
 
 	/**
 	 * MySQL result, which is either a resource or boolean.
@@ -171,7 +171,7 @@ class wpdb {
 	 * @access private
 	 * @var array
 	 */
-	var $queries;
+	public $queries;
 
 	/**
 	 * The number of times to retry reconnecting before dying.
@@ -194,7 +194,7 @@ class wpdb {
 	 * @access private
 	 * @var string
 	 */
-	var $prefix = '';
+	public $prefix = '';
 
 	/**
 	 * WordPress base table prefix.
@@ -203,7 +203,7 @@ class wpdb {
 	 * @access public
 	 * @var string
 	 */
-	 public $base_prefix;
+	public $base_prefix;
 
 	/**
 	 * Whether the database queries are ready to start executing.
@@ -212,7 +212,7 @@ class wpdb {
 	 * @access private
 	 * @var bool
 	 */
-	var $ready = false;
+	public $ready = false;
 
 	/**
 	 * {@internal Missing Description}}
@@ -240,7 +240,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $tables = array( 'posts', 'comments', 'links', 'options', 'postmeta',
+	public $tables = array( 'posts', 'comments', 'links', 'options', 'postmeta',
 		'terms', 'term_taxonomy', 'term_relationships', 'commentmeta' );
 
 	/**
@@ -253,7 +253,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $old_tables = array( 'categories', 'post2cat', 'link2cat' );
+	public $old_tables = array( 'categories', 'post2cat', 'link2cat' );
 
 	/**
 	 * List of WordPress global tables
@@ -263,7 +263,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $global_tables = array( 'users', 'usermeta' );
+	public $global_tables = array( 'users', 'usermeta' );
 
 	/**
 	 * List of Multisite global tables
@@ -273,7 +273,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $ms_global_tables = array( 'blogs', 'signups', 'site', 'sitemeta',
+	public $ms_global_tables = array( 'blogs', 'signups', 'site', 'sitemeta',
 		'sitecategories', 'registration_log', 'blog_versions' );
 
 	/**
@@ -510,4 +510,5 @@ class wpdb {
 	 * @access protected
 	 * @var string
 	 */
+
 // MIGRATION_END

@@ -4,9 +4,9 @@ Model: gemini-1.5-flash
 Strategy: chunk_basic
 Chunk: 5
 Provider: GOOGLE
-Length: 3760 characters
-Usage: {'prompt_tokens': 1650, 'completion_tokens': 1274}
-Timestamp: 2025-09-03 14:44:07.056520
+Length: 3858 characters
+Usage: {'prompt_tokens': 1659, 'completion_tokens': 1292}
+Timestamp: 2025-09-04 13:55:54.080739
 ==================================================
 
 // MIGRATION_START
@@ -17,7 +17,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return true
 	 */
-	public function timer_start() {
+	public function timer_start(): bool {
 		$this->time_start = microtime( true );
 		return true;
 	}
@@ -29,7 +29,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return float Total time spent on the query, in seconds
 	 */
-	public function timer_stop() {
+	public function timer_stop(): float {
 		return ( microtime( true ) - $this->time_start );
 	}
 
@@ -44,7 +44,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 * @param string $error_code Optional. A Computer readable string to identify the error.
 	 * @return false|void
 	 */
-	public function bail( $message, $error_code = '500' ) {
+	public function bail( string $message, string $error_code = '500' ): false|void {
 		if ( !$this->show_errors ) {
 			if ( class_exists( 'WP_Error' ) )
 				$this->error = new WP_Error($error_code, $message);
@@ -64,7 +64,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return WP_Error
 	 */
-	public function check_database_version() {
+	public function check_database_version(): WP_Error {
 		global $wp_version, $required_mysql_version;
 		// Make sure the server has the required MySQL version
 		if ( version_compare($this->db_version(), $required_mysql_version, '<') )
@@ -82,7 +82,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return bool True if collation is supported, false if version does not
 	 */
-	public function supports_collation() {
+	public function supports_collation(): bool {
 		_deprecated_function( __FUNCTION__, '3.5', 'wpdb::has_cap( \'collation\' )' );
 		return $this->has_cap( 'collation' );
 	}
@@ -94,7 +94,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return string The database character collate.
 	 */
-	public function get_charset_collate() {
+	public function get_charset_collate(): string {
 		$charset_collate = '';
 
 		if ( ! empty( $this->charset ) )
@@ -114,7 +114,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 * @param string $db_cap The feature to check for.
 	 * @return bool
 	 */
-	public function has_cap( $db_cap ) {
+	public function has_cap( string $db_cap ): bool {
 		$version = $this->db_version();
 
 		switch ( strtolower( $db_cap ) ) {
@@ -139,7 +139,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return string The name of the calling function
 	 */
-	public function get_caller() {
+	public function get_caller(): string {
 		return wp_debug_backtrace_summary( __CLASS__ );
 	}
 
@@ -150,7 +150,7 @@ Timestamp: 2025-09-03 14:44:07.056520
 	 *
 	 * @return false|string false on failure, version number on success
 	 */
-	public function db_version() {
+	public function db_version(): false|string {
 		if ( $this->use_mysqli ) {
 			$server_info = mysqli_get_server_info( $this->dbh );
 		} else {

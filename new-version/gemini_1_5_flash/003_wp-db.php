@@ -61,7 +61,7 @@ class wpdb {
 	 * @access private
 	 * @var bool
 	 */
-	var $show_errors = false;
+	public $show_errors = false;
 
 	/**
 	 * Whether to suppress errors during the DB bootstrapping.
@@ -70,7 +70,7 @@ class wpdb {
 	 * @since 2.5.0
 	 * @var bool
 	 */
-	var $suppress_errors = false;
+	public $suppress_errors = false;
 
 	/**
 	 * The last error during query.
@@ -87,7 +87,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $num_queries = 0;
+	public $num_queries = 0;
 
 	/**
 	 * Count of rows returned by previous query
@@ -96,7 +96,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $num_rows = 0;
+	public $num_rows = 0;
 
 	/**
 	 * Count of affected rows by previous query
@@ -105,7 +105,7 @@ class wpdb {
 	 * @access private
 	 * @var int
 	 */
-	var $rows_affected = 0;
+	public $rows_affected = 0;
 
 	/**
 	 * The ID generated for an AUTO_INCREMENT column by the previous query (usually INSERT).
@@ -114,7 +114,7 @@ class wpdb {
 	 * @access public
 	 * @var int
 	 */
-	var $insert_id = 0;
+	public $insert_id = 0;
 
 	/**
 	 * Last query made
@@ -123,7 +123,7 @@ class wpdb {
 	 * @access private
 	 * @var array
 	 */
-	var $last_query;
+	public $last_query;
 
 	/**
 	 * Results of the last query made
@@ -132,7 +132,7 @@ class wpdb {
 	 * @access private
 	 * @var array|null
 	 */
-	var $last_result;
+	public $last_result;
 
 	/**
 	 * MySQL result, which is either a resource or boolean.
@@ -159,7 +159,7 @@ class wpdb {
 	 * @access private
 	 * @var array
 	 */
-	var $queries;
+	public $queries;
 
 	/**
 	 * The number of times to retry reconnecting before dying.
@@ -182,7 +182,7 @@ class wpdb {
 	 * @access private
 	 * @var string
 	 */
-	var $prefix = '';
+	public $prefix = '';
 
 	/**
 	 * WordPress base table prefix.
@@ -191,7 +191,7 @@ class wpdb {
 	 * @access public
 	 * @var string
 	 */
-	 public $base_prefix;
+	public $base_prefix;
 
 	/**
 	 * Whether the database queries are ready to start executing.
@@ -200,7 +200,7 @@ class wpdb {
 	 * @access private
 	 * @var bool
 	 */
-	var $ready = false;
+	public $ready = false;
 
 	/**
 	 * {@internal Missing Description}}
@@ -228,7 +228,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $tables = array( 'posts', 'comments', 'links', 'options', 'postmeta',
+	public $tables = array( 'posts', 'comments', 'links', 'options', 'postmeta',
 		'terms', 'term_taxonomy', 'term_relationships', 'commentmeta' );
 
 	/**
@@ -241,7 +241,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $old_tables = array( 'categories', 'post2cat', 'link2cat' );
+	public $old_tables = array( 'categories', 'post2cat', 'link2cat' );
 
 	/**
 	 * List of WordPress global tables
@@ -251,7 +251,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $global_tables = array( 'users', 'usermeta' );
+	public $global_tables = array( 'users', 'usermeta' );
 
 	/**
 	 * List of Multisite global tables
@@ -261,7 +261,7 @@ class wpdb {
 	 * @see wpdb::tables()
 	 * @var array
 	 */
-	var $ms_global_tables = array( 'blogs', 'signups', 'site', 'sitemeta',
+	public $ms_global_tables = array( 'blogs', 'signups', 'site', 'sitemeta',
 		'sitecategories', 'registration_log', 'blog_versions' );
 
 	/**
@@ -1012,7 +1012,7 @@ class wpdb {
 	 * @param string $string
 	 * @return string
 	 */
-	function _weak_escape( $string ) {
+	function _weak_escape( $string ): string {
 		if ( func_num_args() === 1 && function_exists( '_deprecated_function' ) )
 			_deprecated_function( __METHOD__, '3.6', 'wpdb::prepare() or esc_sql()' );
 		return addslashes( $string );
@@ -1029,7 +1029,7 @@ class wpdb {
 	 * @param  string $string to escape
 	 * @return string escaped
 	 */
-	function _real_escape( $string ) {
+	function _real_escape( string $string ): string {
 		if ( $this->dbh ) {
 			if ( $this->use_mysqli ) {
 				return mysqli_real_escape_string( $this->dbh, $string );
@@ -1192,7 +1192,7 @@ class wpdb {
 	 * @return string Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare()
 	 *                or real_escape next.
 	 */
-	public function esc_like( $text ) {
+	public function esc_like( string $text ): string {
 		return addcslashes( $text, '_%\\' );
 	}
 
@@ -1205,7 +1205,7 @@ class wpdb {
 	 * @param string $str The error to display
 	 * @return bool False if the showing of errors is disabled.
 	 */
-	public function print_error( $str = '' ) {
+	public function print_error( string $str = '' ): bool {
 		global $EZSQL_ERROR;
 
 		if ( !$str ) {
@@ -1265,7 +1265,7 @@ class wpdb {
 	 * @param bool $show Whether to show or hide errors
 	 * @return bool Old value for showing errors.
 	 */
-	public function show_errors( $show = true ) {
+	public function show_errors( bool $show = true ): bool {
 		$errors = $this->show_errors;
 		$this->show_errors = $show;
 		return $errors;
@@ -1281,7 +1281,7 @@ class wpdb {
 	 *
 	 * @return bool Whether showing of errors was active
 	 */
-	public function hide_errors() {
+	public function hide_errors(): bool {
 		$show = $this->show_errors;
 		$this->show_errors = false;
 		return $show;
@@ -1298,7 +1298,7 @@ class wpdb {
 	 * @param bool $suppress Optional. New value. Defaults to true.
 	 * @return bool Old value
 	 */
-	public function suppress_errors( $suppress = true ) {
+	public function suppress_errors( bool $suppress = true ): bool {
 		$errors = $this->suppress_errors;
 		$this->suppress_errors = (bool) $suppress;
 		return $errors;
@@ -1310,7 +1310,7 @@ class wpdb {
 	 * @since 0.71
 	 * @return void
 	 */
-	public function flush() {
+	public function flush(): void {
 		$this->last_result = array();
 		$this->col_info    = null;
 		$this->last_query  = null;
@@ -1338,7 +1338,7 @@ class wpdb {
 	 * @param bool $allow_bail Optional. Allows the function to bail. Default true.
 	 * @return bool True with a successful connection, false on failure.
 	 */
-	public function db_connect( $allow_bail = true ) {
+	public function db_connect( bool $allow_bail = true ): bool {
 
 		$this->is_mysql = true;
 
@@ -1457,7 +1457,7 @@ class wpdb {
 	 * @param bool $allow_bail Optional. Allows the function to bail. Default true.
 	 * @return bool True if the connection is up.
 	 */
-	public function check_connection( $allow_bail = true ) {
+	public function check_connection( bool $allow_bail = true ): bool {
 		if ( $this->use_mysqli ) {
 			if ( @mysqli_ping( $this->dbh ) ) {
 				return true;
@@ -1527,7 +1527,7 @@ class wpdb {
 	 * @param string $query Database query
 	 * @return int|false Number of rows affected/selected or false on error
 	 */
-	public function query( $query ) {
+	public function query( $query ): int|false {
 		if ( ! $this->ready )
 			return false;
 
@@ -1675,7 +1675,7 @@ class wpdb {
 	 * 	A format is one of '%d', '%f', '%s' (integer, float, string). If omitted, all values in $data will be treated as strings unless otherwise specified in wpdb::$field_types.
 	 * @return int|false The number of rows inserted, or false on error.
 	 */
-	public function insert( $table, $data, $format = null ) {
+	public function insert( $table, $data, $format = null ): int|false {
 		return $this->_insert_replace_helper( $table, $data, $format, 'INSERT' );
 	}
 
@@ -1698,7 +1698,7 @@ class wpdb {
 	 * 	A format is one of '%d', '%f', '%s' (integer, float, string). If omitted, all values in $data will be treated as strings unless otherwise specified in wpdb::$field_types.
 	 * @return int|false The number of rows affected, or false on error.
 	 */
-	public function replace( $table, $data, $format = null ) {
+	public function replace( $table, $data, $format = null ): int|false {
 		return $this->_insert_replace_helper( $table, $data, $format, 'REPLACE' );
 	}
 
@@ -1720,7 +1720,7 @@ class wpdb {
 	 * @param string $type Optional. What type of operation is this? INSERT or REPLACE. Defaults to INSERT.
 	 * @return int|false The number of rows affected, or false on error.
 	 */
-	function _insert_replace_helper( $table, $data, $format = null, $type = 'INSERT' ) {
+	function _insert_replace_helper( $table, $data, $format = null, $type = 'INSERT' ): int|false {
 		if ( ! in_array( strtoupper( $type ), array( 'REPLACE', 'INSERT' ) ) )
 			return false;
 		$this->insert_id = 0;
@@ -1761,7 +1761,7 @@ class wpdb {
 	 * @param array|string $where_format Optional. An array of formats to be mapped to each of the values in $where. If string, that format will be used for all of the items in $where. A format is one of '%d', '%f', '%s' (integer, float, string). If omitted, all values in $where will be treated as strings.
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public function update( $table, $data, $where, $format = null, $where_format = null ) {
+	public function update( $table, $data, $where, $format = null, $where_format = null ): int|false {
 		if ( ! is_array( $data ) || ! is_array( $where ) )
 			return false;
 
@@ -1810,7 +1810,7 @@ class wpdb {
 	 * @param array|string $where_format Optional. An array of formats to be mapped to each of the values in $where. If string, that format will be used for all of the items in $where. A format is one of '%d', '%f', '%s' (integer, float, string). If omitted, all values in $where will be treated as strings unless otherwise specified in wpdb::$field_types.
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public function delete( $table, $where, $where_format = null ) {
+	public function delete( $table, $where, $where_format = null ): int|false {
 		if ( ! is_array( $where ) )
 			return false;
 
@@ -1849,7 +1849,7 @@ class wpdb {
 	 * @param int $y Optional. Row of value to return. Indexed from 0.
 	 * @return string|null Database query result (as string), or null on failure
 	 */
-	public function get_var( $query = null, $x = 0, $y = 0 ) {
+	public function get_var( $query = null, $x = 0, $y = 0 ): ?string {
 		$this->func_call = "\$db->get_var(\"$query\", $x, $y)";
 		if ( $query )
 			$this->query( $query );
@@ -1876,7 +1876,7 @@ class wpdb {
 	 * @param int $y Optional. Row to return. Indexed from 0.
 	 * @return mixed Database query result in format specified by $output or null on failure
 	 */
-	public function get_row( $query = null, $output = OBJECT, $y = 0 ) {
+	public function get_row( $query = null, $output = OBJECT, $y = 0 ): mixed {
 		$this->func_call = "\$db->get_row(\"$query\",$output,$y)";
 		if ( $query )
 			$this->query( $query );
@@ -1913,7 +1913,7 @@ class wpdb {
 	 * @param int $x Optional. Column to return. Indexed from 0.
 	 * @return array Database query result. Array indexed from 0 by SQL result row number.
 	 */
-	public function get_col( $query = null , $x = 0 ) {
+	public function get_col( $query = null , $x = 0 ): array {
 		if ( $query )
 			$this->query( $query );
 
@@ -1938,7 +1938,7 @@ class wpdb {
 	 * 	With OBJECT_K, return an associative array of row objects keyed by the value of each row's first column's value. Duplicate keys are discarded.
 	 * @return mixed Database query results
 	 */
-	public function get_results( $query = null, $output = OBJECT ) {
+	public function get_results( $query = null, $output = OBJECT ): mixed {
 		$this->func_call = "\$db->get_results(\"$query\", $output)";
 
 		if ( $query )
@@ -2012,7 +2012,7 @@ class wpdb {
 	 * @param int $col_offset Optional. 0: col name. 1: which table the col's in. 2: col's max length. 3: if the col is numeric. 4: col's type
 	 * @return mixed Column Results
 	 */
-	public function get_col_info( $info_type = 'name', $col_offset = -1 ) {
+	public function get_col_info( $info_type = 'name', $col_offset = -1 ): mixed {
 		$this->load_col_info();
 
 		if ( $this->col_info ) {
@@ -2035,7 +2035,7 @@ class wpdb {
 	 *
 	 * @return true
 	 */
-	public function timer_start() {
+	public function timer_start(): bool {
 		$this->time_start = microtime( true );
 		return true;
 	}
@@ -2047,7 +2047,7 @@ class wpdb {
 	 *
 	 * @return float Total time spent on the query, in seconds
 	 */
-	public function timer_stop() {
+	public function timer_stop(): float {
 		return ( microtime( true ) - $this->time_start );
 	}
 
@@ -2062,7 +2062,7 @@ class wpdb {
 	 * @param string $error_code Optional. A Computer readable string to identify the error.
 	 * @return false|void
 	 */
-	public function bail( $message, $error_code = '500' ) {
+	public function bail( string $message, string $error_code = '500' ): false|void {
 		if ( !$this->show_errors ) {
 			if ( class_exists( 'WP_Error' ) )
 				$this->error = new WP_Error($error_code, $message);
@@ -2082,7 +2082,7 @@ class wpdb {
 	 *
 	 * @return WP_Error
 	 */
-	public function check_database_version() {
+	public function check_database_version(): WP_Error {
 		global $wp_version, $required_mysql_version;
 		// Make sure the server has the required MySQL version
 		if ( version_compare($this->db_version(), $required_mysql_version, '<') )
@@ -2100,7 +2100,7 @@ class wpdb {
 	 *
 	 * @return bool True if collation is supported, false if version does not
 	 */
-	public function supports_collation() {
+	public function supports_collation(): bool {
 		_deprecated_function( __FUNCTION__, '3.5', 'wpdb::has_cap( \'collation\' )' );
 		return $this->has_cap( 'collation' );
 	}
@@ -2112,7 +2112,7 @@ class wpdb {
 	 *
 	 * @return string The database character collate.
 	 */
-	public function get_charset_collate() {
+	public function get_charset_collate(): string {
 		$charset_collate = '';
 
 		if ( ! empty( $this->charset ) )
@@ -2132,7 +2132,7 @@ class wpdb {
 	 * @param string $db_cap The feature to check for.
 	 * @return bool
 	 */
-	public function has_cap( $db_cap ) {
+	public function has_cap( string $db_cap ): bool {
 		$version = $this->db_version();
 
 		switch ( strtolower( $db_cap ) ) {
@@ -2157,7 +2157,7 @@ class wpdb {
 	 *
 	 * @return string The name of the calling function
 	 */
-	public function get_caller() {
+	public function get_caller(): string {
 		return wp_debug_backtrace_summary( __CLASS__ );
 	}
 
@@ -2168,7 +2168,7 @@ class wpdb {
 	 *
 	 * @return false|string false on failure, version number on success
 	 */
-	public function db_version() {
+	public function db_version(): false|string {
 		if ( $this->use_mysqli ) {
 			$server_info = mysqli_get_server_info( $this->dbh );
 		} else {
