@@ -5,7 +5,7 @@
     "analysis_method": "rector_php_version_upgrades_llm_evaluation",
     "llm_model": "gemini_1_5_flash",
     "rector_version": "2.1.0",
-    "analysis_date": "2025-09-03T18:28:35.650253",
+    "analysis_date": "2025-09-04T12:45:52.222838",
     "evaluation_type": "llm_generated_code_analysis",
     "focus": "php_version_specific_changes_on_llm_migrated_code"
   },
@@ -27,7 +27,7 @@
       },
       "analysis_metadata": {
         "rector_version": "2.1.0",
-        "analysis_date": "2025-09-03T18:28:28.030475",
+        "analysis_date": "2025-09-04T12:45:38.447536",
         "file_size_kb": 44.7,
         "analysis_type": "version_specific_only"
       },
@@ -70,7 +70,7 @@
       },
       "analysis_metadata": {
         "rector_version": "2.1.0",
-        "analysis_date": "2025-09-03T18:28:35.650253",
+        "analysis_date": "2025-09-04T12:45:52.221801",
         "file_size_kb": 61.4,
         "analysis_type": "version_specific_only"
       },
