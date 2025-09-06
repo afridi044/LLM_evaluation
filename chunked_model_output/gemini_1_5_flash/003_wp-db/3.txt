@@ -4,9 +4,9 @@ Model: gemini-1.5-flash
 Strategy: chunk_basic
 Chunk: 3
 Provider: GOOGLE
-Length: 16578 characters
-Usage: {'prompt_tokens': 5849, 'completion_tokens': 5481}
-Timestamp: 2025-09-04 13:55:00.378300
+Length: 16563 characters
+Usage: {'prompt_tokens': 5849, 'completion_tokens': 5479}
+Timestamp: 2025-09-05 11:55:52.826533
 ==================================================
 
 // MIGRATION_START
@@ -41,7 +41,7 @@ Timestamp: 2025-09-04 13:55:00.378300
 	 * @param  string $string to escape
 	 * @return string escaped
 	 */
-	function _real_escape( string $string ): string {
+	function _real_escape( $string ): string {
 		if ( $this->dbh ) {
 			if ( $this->use_mysqli ) {
 				return mysqli_real_escape_string( $this->dbh, $string );
@@ -118,7 +118,7 @@ Timestamp: 2025-09-04 13:55:00.378300
 	 * @param string $string to escape
 	 * @return void
 	 */
-	public function escape_by_ref( &$string ) {
+	public function escape_by_ref( &$string ): void {
 		if ( ! is_float( $string ) )
 			$string = $this->_real_escape( $string );
 	}
@@ -204,7 +204,7 @@ Timestamp: 2025-09-04 13:55:00.378300
 	 * @return string Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare()
 	 *                or real_escape next.
 	 */
-	public function esc_like( string $text ): string {
+	public function esc_like( $text ): string {
 		return addcslashes( $text, '_%\\' );
 	}
 
@@ -217,7 +217,7 @@ Timestamp: 2025-09-04 13:55:00.378300
 	 * @param string $str The error to display
 	 * @return bool False if the showing of errors is disabled.
 	 */
-	public function print_error( string $str = '' ): bool {
+	public function print_error( $str = '' ): bool {
 		global $EZSQL_ERROR;
 
 		if ( !$str ) {

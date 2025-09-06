@@ -1,12 +1,12 @@
 === RAW MODEL RESPONSE ===
 File: 001_getid3.lib.php
 Model: gemini-1.5-flash
-Strategy: chunk_comprehensive
+Strategy: chunk_basic
 Chunk: 2
 Provider: GOOGLE
-Length: 19593 characters
-Usage: {'prompt_tokens': 7956, 'completion_tokens': 7578}
-Timestamp: 2025-09-03 14:22:54.263015
+Length: 19604 characters
+Usage: {'prompt_tokens': 7883, 'completion_tokens': 7580}
+Timestamp: 2025-09-05 11:50:10.711551
 ==================================================
 
 // MIGRATION_START
@@ -21,7 +21,7 @@ Timestamp: 2025-09-03 14:22:54.263015
 				}
 			}
 		}
-		return ($returnkey ? $minkey : $minvalue);
+		return $returnkey ? $minkey : $minvalue;
 	}
 
 	public static function XML2array(string $XMLstring): mixed {
@@ -50,7 +50,7 @@ Timestamp: 2025-09-03 14:22:54.263015
 	// Allan Hansen <ahØartemis*dk>
 	// self::md5_data() - returns md5sum for a file from startuing position to absolute end position
 	public static function hash_data(string $file, int $offset, int $end, string $algorithm): mixed {
-		static $tempdir = '';
+		static string $tempdir = '';
 		if (!self::intValueSupported($end)) {
 			return false;
 		}
@@ -468,7 +468,7 @@ Timestamp: 2025-09-03 14:22:54.263015
 
 
 		// iconv() not available
-		static $ConversionFunctionList = array();
+		static array $ConversionFunctionList = array();
 		if (empty($ConversionFunctionList)) {
 			$ConversionFunctionList['ISO-8859-1']['UTF-8']    = 'iconv_fallback_iso88591_utf8';
 			$ConversionFunctionList['ISO-8859-1']['UTF-16']   = 'iconv_fallback_iso88591_utf16';

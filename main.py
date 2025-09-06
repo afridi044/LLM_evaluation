@@ -105,7 +105,8 @@ print("\n🚀 Starting batch migration...")
 # migration_manager.batch_migrate(list(test_files.keys())[:3], model='mistralai/mistral-small-3.2-24b-instruct:free', strategy='basic')
 
 # Mixed provider batch (you can mix and match in sequence):
-migration_manager.migrate_file('003_wp-db.php', 'gemini-1.5-flash', 'basic')
+# Batch migrate first 5 files using Gemini 1.5 Flash
+migration_manager.batch_migrate(list(test_files.keys())[11:12], model='gemini-1.5-flash', strategy='basic')
 # migration_manager.migrate_file('file2.php', 'anthropic/claude-3.5-sonnet', 'comprehensive')
 
 print("\n🔄 Processing responses and reconstructing files...")

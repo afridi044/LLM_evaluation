@@ -1,12 +1,12 @@
 === RAW MODEL RESPONSE ===
 File: 001_getid3.lib.php
 Model: gemini-1.5-flash
-Strategy: chunk_comprehensive
+Strategy: chunk_basic
 Chunk: 1
 Provider: GOOGLE
-Length: 16672 characters
-Usage: {'prompt_tokens': 6112, 'completion_tokens': 5800}
-Timestamp: 2025-09-03 14:22:01.212932
+Length: 16615 characters
+Usage: {'prompt_tokens': 6039, 'completion_tokens': 5789}
+Timestamp: 2025-09-05 11:49:17.306680
 ==================================================
 
 // MIGRATION_START
@@ -26,7 +26,7 @@ Timestamp: 2025-09-03 14:22:01.212932
 class getid3_lib
 {
 
-	public static function PrintHexBytes(string $string, bool $hex = true, bool $spaces = true, string $htmlencoding = 'UTF-8'): string {
+	public static function PrintHexBytes($string, $hex=true, $spaces=true, $htmlencoding='UTF-8'): string {
 		$returnstring = '';
 		for ($i = 0; $i < strlen($string); $i++) {
 			if ($hex) {
@@ -67,7 +67,7 @@ class getid3_lib
 	}
 
 
-	public static function safe_inc(int &$variable, int $increment = 1): bool {
+	public static function safe_inc(&$variable, $increment=1): bool {
 		if (isset($variable)) {
 			$variable += $increment;
 		} else {
@@ -108,7 +108,7 @@ class getid3_lib
 	}
 
 	public static function DecimalizeFraction(string $fraction): float {
-		[$numerator, $denominator] = explode('/', $fraction);
+		list($numerator, $denominator) = explode('/', $fraction);
 		return $numerator / ($denominator ? $denominator : 1);
 	}
 
@@ -120,15 +120,15 @@ class getid3_lib
 	}
 
 
-	public static function NormalizeBinaryPoint(string $binarypointnumber, int $maxbits = 52): array {
+	public static function NormalizeBinaryPoint(string $binarypointnumber, int $maxbits=52): array {
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/binary.html
 		if (strpos($binarypointnumber, '.') === false) {
 			$binarypointnumber = '0.'.$binarypointnumber;
-		} elseif ($binarypointnumber{0} == '.') {
+		} elseif ($binarypointnumber[0] == '.') {
 			$binarypointnumber = '0'.$binarypointnumber;
 		}
 		$exponent = 0;
-		while (($binarypointnumber{0} != '1') || (substr($binarypointnumber, 1, 1) != '.')) {
+		while (($binarypointnumber[0] != '1') || (substr($binarypointnumber, 1, 1) != '.')) {
 			if (substr($binarypointnumber, 1, 1) == '.') {
 				$exponent--;
 				$binarypointnumber = substr($binarypointnumber, 2, 1).'.'.substr($binarypointnumber, 3);
@@ -136,11 +136,11 @@ class getid3_lib
 				$pointpos = strpos($binarypointnumber, '.');
 				$exponent += ($pointpos - 1);
 				$binarypointnumber = str_replace('.', '', $binarypointnumber);
-				$binarypointnumber = $binarypointnumber{0}.'.'.substr($binarypointnumber, 1);
+				$binarypointnumber = $binarypointnumber[0].'.'.substr($binarypointnumber, 1);
 			}
 		}
 		$binarypointnumber = str_pad(substr($binarypointnumber, 0, $maxbits + 2), $maxbits + 2, '0', STR_PAD_RIGHT);
-		return ['normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent];
+		return array('normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent);
 	}
 
 
@@ -191,12 +191,12 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2Float(string $byteword): float|string|false {
+	public static function LittleEndian2Float(string $byteword): float|string|bool {
 		return self::BigEndian2Float(strrev($byteword));
 	}
 
 
-	public static function BigEndian2Float(string $byteword): float|string|false {
+	public static function BigEndian2Float(string $byteword): float|string|bool {
 		// ANSI/IEEE Standard 754-1985, Standard for Binary Floating Point Arithmetic
 		// http://www.psc.edu/general/software/packages/ieee/ieee.html
 		// http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/ieee.html
@@ -205,7 +205,7 @@ class getid3_lib
 		if (!$bitword) {
 			return 0;
 		}
-		$signbit = $bitword{0};
+		$signbit = $bitword[0];
 
 		switch (strlen($byteword) * 8) {
 			case 32:
@@ -222,7 +222,7 @@ class getid3_lib
 				// 80-bit Apple SANE format
 				// http://www.mactech.com/articles/mactech/Vol.06/06.01/SANENormalized/
 				$exponentstring = substr($bitword, 1, 15);
-				$isnormalized = intval($bitword{16});
+				$isnormalized = intval($bitword[16]);
 				$fractionstring = substr($bitword, 17, 63);
 				$exponent = pow(2, self::Bin2Dec($exponentstring) - 16383);
 				$fraction = $isnormalized + self::DecimalBinary2Float($fractionstring);
@@ -274,7 +274,7 @@ class getid3_lib
 	}
 
 
-	public static function BigEndian2Int(string $byteword, bool $synchsafe = false, bool $signed = false): int|false {
+	public static function BigEndian2Int(string $byteword, bool $synchsafe=false, bool $signed=false): int|false {
 		$intvalue = 0;
 		$bytewordlen = strlen($byteword);
 		if ($bytewordlen == 0) {
@@ -304,7 +304,7 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2Int(string $byteword, bool $signed = false): int|false {
+	public static function LittleEndian2Int(string $byteword, bool $signed=false): int|false {
 		return self::BigEndian2Int(strrev($byteword), false, $signed);
 	}
 
@@ -319,7 +319,7 @@ class getid3_lib
 	}
 
 
-	public static function BigEndian2String(int $number, int $minbytes = 1, bool $synchsafe = false, bool $signed = false): string {
+	public static function BigEndian2String(int $number, int $minbytes=1, bool $synchsafe=false, bool $signed=false): string {
 		if ($number < 0) {
 			throw new Exception('ERROR: self::BigEndian2String() does not support negative numbers');
 		}
@@ -354,10 +354,10 @@ class getid3_lib
 	}
 
 
-	public static function Bin2Dec(string $binstring, bool $signed = false): int {
+	public static function Bin2Dec(string $binstring, bool $signed=false): int|float {
 		$signmult = 1;
 		if ($signed) {
-			if ($binstring{0} == '1') {
+			if ($binstring[0] == '1') {
 				$signmult = -1;
 			}
 			$binstring = substr($binstring, 1);
@@ -381,7 +381,7 @@ class getid3_lib
 	}
 
 
-	public static function LittleEndian2String(int $number, int $minbytes = 1, bool $synchsafe = false): string {
+	public static function LittleEndian2String(int $number, int $minbytes=1, bool $synchsafe=false): string {
 		$intstring = '';
 		while ($number > 0) {
 			if ($synchsafe) {
@@ -440,7 +440,7 @@ class getid3_lib
 		return true;
 	}
 
-	public static function fileextension(string $filename, int $numextensions = 1): string {
+	public static function fileextension(string $filename, int $numextensions=1): string {
 		if (strstr($filename, '.')) {
 			$reversedfilename = strrev($filename);
 			$offset = 0;
@@ -489,7 +489,7 @@ class getid3_lib
 	}
 
 
-	public static function CreateDeepArray(string $ArrayPath, string $Separator, mixed $Value): array {
+	public static function CreateDeepArray(string $ArrayPath, string $Separator, $Value): array {
 		// assigns $Value to a nested array path:
 		//   $foo = self::CreateDeepArray('/path/to/my', '/', 'file.txt')
 		// is the same as:
@@ -505,7 +505,7 @@ class getid3_lib
 		return $ReturnedArray;
 	}
 
-	public static function array_max(array $arraydata, bool $returnkey = false): mixed {
+	public static function array_max(array $arraydata, bool $returnkey=false): mixed {
 		$maxvalue = false;
 		$maxkey = false;
 		foreach ($arraydata as $key => $value) {

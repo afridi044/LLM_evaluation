@@ -1,0 +1,124 @@
+Reconstructing 002_module.audio-video.asf.php from 4 chunks
+Model: gemini_1_5_flash
+Directory: chunked_model_output\gemini_1_5_flash\002_module.audio-video.asf      
+   Found chunks: [1, 2, 3, 4]
+   Processing chunk 1...
+Processing 1.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 1
+   Processing chunk 2...
+Processing 2.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 2
+   Processing chunk 3...
+Processing 3.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 3
+   Processing chunk 4...
+Processing 4.txt
+   SUCCESS: Found 21262 chars of migrated code
+      SUCCESS: 21262 chars
+   WARNING: Chunk 1 failed - adding placeholder comment
+   WARNING: Chunk 2 failed - adding placeholder comment
+   WARNING: Chunk 3 failed - adding placeholder comment
+   Combined 1/4 chunks successfully
+   Final code length: 21361 characters
+   SAVED: new-version\gemini_1_5_flash\002_module.audio-video.asf.php
+
+
+
+Reconstructing 012_module.audio-video.riff.php from 5 chunks
+Model: gemini_1_5_flash
+Directory: chunked_model_output\gemini_1_5_flash\012_module.audio-video.riff     
+   Found chunks: [1, 2, 3, 4, 5]
+   Processing chunk 1...
+Processing 1.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 1
+   Processing chunk 2...
+Processing 2.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 2
+   Processing chunk 3...
+Processing 3.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 3
+   Processing chunk 4...
+Processing 4.txt
+   SUCCESS: Found 19166 chars of migrated code
+      SUCCESS: 19166 chars
+   Processing chunk 5...
+Processing 5.txt
+   SUCCESS: Found 247 chars of migrated code
+      SUCCESS: 247 chars
+   WARNING: Chunk 1 failed - adding placeholder comment
+   WARNING: Chunk 2 failed - adding placeholder comment
+   WARNING: Chunk 3 failed - adding placeholder comment
+   Combined 2/5 chunks successfully
+   Final code length: 19512 characters
+   SAVED: new-version\gemini_1_5_flash\012_module.audio-video.riff.php
+
+
+
+
+Reconstructing 013_file.php from 3 chunks
+Model: gemini_1_5_flash
+Directory: chunked_model_output\gemini_1_5_flash\013_file
+   Found chunks: [1, 2, 3]
+   Processing chunk 1...
+Processing 1.txt
+   SUCCESS: Found 18636 chars of migrated code
+      SUCCESS: 18636 chars
+   Processing chunk 2...
+Processing 2.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 2
+   Processing chunk 3...
+Processing 3.txt
+   SUCCESS: Found 28 chars of migrated code
+      SUCCESS: 28 chars
+   WARNING: Chunk 2 failed - adding placeholder comment
+   Combined 2/3 chunks successfully
+   Final code length: 18697 characters
+   SAVED: new-version\gemini_1_5_flash\013_file.php
+
+
+
+Reconstructing 014_module.tag.id3v2.php from 7 chunks
+Model: gemini_1_5_flash
+Directory: chunked_model_output\gemini_1_5_flash\014_module.tag.id3v2
+   Found chunks: [1, 2, 3, 4, 5, 6, 7]
+   Processing chunk 1...
+Processing 1.txt
+   SUCCESS: Found 24013 chars of migrated code
+      SUCCESS: 24013 chars
+   Processing chunk 2...
+Processing 2.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 2
+   Processing chunk 3...
+Processing 3.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 3
+   Processing chunk 4...
+Processing 4.txt
+   ERROR: No migrated code found between markers
+      ERROR: Failed to parse chunk 4
+   Processing chunk 5...
+Processing 5.txt
+   SUCCESS: Found 11490 chars of migrated code
+      SUCCESS: 11490 chars
+   Processing chunk 6...
+Processing 6.txt
+   SUCCESS: Found 14144 chars of migrated code
+      SUCCESS: 14144 chars
+   Processing chunk 7...
+Processing 7.txt
+   SUCCESS: Found 1475 chars of migrated code
+      SUCCESS: 1475 chars
+   WARNING: Chunk 2 failed - adding placeholder comment
+   WARNING: Chunk 3 failed - adding placeholder comment
+   WARNING: Chunk 4 failed - adding placeholder comment
+   Combined 4/7 chunks successfully
+   Final code length: 51221 characters
+   SAVED: new-version\gemini_1_5_flash\014_module.tag.id3v2.php

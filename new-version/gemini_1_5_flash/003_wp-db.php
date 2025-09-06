@@ -1029,7 +1029,7 @@ class wpdb {
 	 * @param  string $string to escape
 	 * @return string escaped
 	 */
-	function _real_escape( string $string ): string {
+	function _real_escape( $string ): string {
 		if ( $this->dbh ) {
 			if ( $this->use_mysqli ) {
 				return mysqli_real_escape_string( $this->dbh, $string );
@@ -1106,7 +1106,7 @@ class wpdb {
 	 * @param string $string to escape
 	 * @return void
 	 */
-	public function escape_by_ref( &$string ) {
+	public function escape_by_ref( &$string ): void {
 		if ( ! is_float( $string ) )
 			$string = $this->_real_escape( $string );
 	}
@@ -1192,7 +1192,7 @@ class wpdb {
 	 * @return string Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare()
 	 *                or real_escape next.
 	 */
-	public function esc_like( string $text ): string {
+	public function esc_like( $text ): string {
 		return addcslashes( $text, '_%\\' );
 	}
 
@@ -1205,7 +1205,7 @@ class wpdb {
 	 * @param string $str The error to display
 	 * @return bool False if the showing of errors is disabled.
 	 */
-	public function print_error( string $str = '' ): bool {
+	public function print_error( $str = '' ): bool {
 		global $EZSQL_ERROR;
 
 		if ( !$str ) {
